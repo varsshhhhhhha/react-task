@@ -1,21 +1,32 @@
-pipeline{
+pipeline {
     agent any
-    tools{
-        nodejs 'nodejs-v22.12.0'
+    tools {
+        nodejs 'nodejs-v22.12.0' 
     }
-    environment{
-        NODEJS_HOME = 'C:/Program Files/nodejs/'
+ 
+    environment {
+        NODEJS_HOME = 'C:/Program Files/nodejs'  
         SONAR_SCANNER_PATH = 'D:/sonar-scanner-cli-6.2.1.4610-windows-x64/sonar-scanner-6.2.1.4610-windows-x64/bin'
     }
-    stages('Install Dependencies'){
-        steps{
+ 
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+ 
+        stage('Install Dependencies') {
+            steps {
+                // Set the PATH and install dependencies using npm
                 bat '''
                 set PATH=%NODEJS_HOME%;%PATH%
                 npm install
                 '''
             }
         }
-    stage('Lint') {
+ 
+        stage('Lint') {
             steps {
                 // Run linting to ensure code quality
                 bat '''
@@ -65,4 +76,3 @@ pipeline{
         }
     }
 }
-
